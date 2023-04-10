@@ -1,0 +1,27 @@
+# curl -H "User-Agent: nl.Biernet.iOS.app/V3" https://www.biernet.nl/extra/app/V3_3.3.4/winkel.php | jq
+stores:
+  - fullName: "Albert Heijn"
+    storeId: 1
+  - fullName: "Gall en Gall"
+    storeId: 14
+  - fullName: "Plus"
+    storeId: 12
+  - fullName: "Jumbo"
+    storeId: 5
+
+# curl -H "User-Agent: nl.Biernet.iOS.app/V3" https://www.biernet.nl/extra/app/V3_3.3.4/soort.php | jq
+brands:
+  - fullName: "Grolsch Premium Pilsener Krat 24x0,3L"
+    brandId: 1141
+  - fullName: "Grolsch Premium Pilsener Krat 16x0,45L"
+    brandId: 13
+  - fullName: "Warsteiner Premium Pilsener Krat 24x0,33L"
+    brandId: 246
+  - fullName: "Warsteiner Premium Pilsener Krat 24x0,3L"
+    brandId: 26
+  - fullName: "Hertog Jan Pilsener Krat 24x0,3L"
+    brandId: 19
+
+http:
+  cacheTimeout: 43200 # 12 hours
+  listenPort: 8080 # Update Dockerfile accordingly
