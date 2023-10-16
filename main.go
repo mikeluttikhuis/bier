@@ -97,19 +97,20 @@ func serve(discounts []map[string]string, config Config) {
 			w.WriteHeader(404)
 			w.Write([]byte(`Not Found`))
 			return
-
 		}
+
 		// Lock the mutex to prevent concurrent access to the cached data.
 		mutex.Lock()
 		defer mutex.Unlock()
 
-		tmpl, err := template.ParseFiles("template.html")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
+		// Check if cached data is still valid.
 		if time.Now().Before(expiration) {
+			tmpl, err := template.ParseFiles("template.html")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
 			// If the cached data is still valid, write it to the response.
 			err = tmpl.Execute(w, discounts)
 			if err != nil {
@@ -117,15 +118,20 @@ func serve(discounts []map[string]string, config Config) {
 				return
 			}
 		} else {
-
 			// If the cached data is no longer valid, fetch the data from the source.
 			// TODO: Do some error handling if fetch() errors, then just serve from cache.
 			fresh_discounts := fetch(config)
 
 			// Update the cached data with the new data and expiration time.
 			expiration = time.Now().Add(time.Second * time.Duration(config.Http.CacheTimeout))
+			discounts = fresh_discounts // Update the cached data.
 
 			// Write the new data to the response.
+			tmpl, err := template.ParseFiles("template.html")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 			err = tmpl.Execute(w, fresh_discounts)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -133,6 +139,7 @@ func serve(discounts []map[string]string, config Config) {
 			}
 		}
 	})
+
 	// Serve the webserver on the configured port
 	http.ListenAndServe(fmt.Sprintf(":%v", config.Http.ListenPort), nil)
 
