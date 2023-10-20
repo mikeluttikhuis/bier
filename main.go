@@ -34,6 +34,8 @@ type Config struct {
 	Http   Http     `yaml:"http"`
 }
 
+var fetchedAt time.Time
+
 func fetch(config Config) []map[string]string {
 	// Create new HTTP requests
 	req, err := http.NewRequest("GET", "https://www.biernet.nl/extra/app/V3_3.3.4/aanbieding.php", nil)
@@ -105,6 +107,9 @@ func serve(discounts []map[string]string, config Config) {
 
 		// Check if cached data is still valid.
 		if time.Now().Before(expiration) {
+			w.Header().Set("X-Cache-TTL", strconv.Itoa(int(expiration.Unix())))
+			w.Header().Set("X-Cache-FetchedAt", strconv.Itoa(int(fetchedAt.Unix())))
+
 			tmpl, err := template.ParseFiles("template.html")
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -124,7 +129,11 @@ func serve(discounts []map[string]string, config Config) {
 
 			// Update the cached data with the new data and expiration time.
 			expiration = time.Now().Add(time.Second * time.Duration(config.Http.CacheTimeout))
+
 			discounts = fresh_discounts // Update the cached data.
+			fetchedAt = time.Now()
+			w.Header().Set("X-Cache-TTL", strconv.Itoa(int(expiration.Unix())))
+			w.Header().Set("X-Cache-FetchedAt", strconv.Itoa(int(fetchedAt.Unix())))
 
 			// Write the new data to the response.
 			tmpl, err := template.ParseFiles("template.html")
