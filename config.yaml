@@ -21,6 +21,8 @@ brands:
     brandId: 26
   - fullName: "Hertog Jan Pilsener Krat 24x0,3L"
     brandId: 19
+  - fullName: "Heineken Pilsener Krat 24x0,3L"
+    brandId: 19
 
 http:
   cacheTimeout: 43200 # 12 hours
