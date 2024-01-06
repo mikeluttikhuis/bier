@@ -24,4 +24,4 @@ brands:
 
 http:
   cacheTimeout: 43200 # 12 hours
-  listenPort: 8080 # Update Dockerfile accordingly
+  listenPort: 8080 # Update Acornfile accordingly

@@ -1,0 +1,26 @@
+name: Create and publish an Acorn image
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  build-push-upgrade-acorn:
+    runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: acorn-io/actions-setup@v1
+      - uses: acorn-io/actions-login@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set Tag
+        run: |
+          echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Build and Push, then update the Acorn
+        run: |
+          acorn build --push --tag ghcr.io/${{ github.repository }}-acorn:$TAG .
+          acorn run --update --name ${{ github.event.repository.name }} 'ghcr.io/mikeluttikhuis/bier-acorn:*'
