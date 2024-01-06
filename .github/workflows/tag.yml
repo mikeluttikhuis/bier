@@ -23,4 +23,4 @@ jobs:
       - name: Build and Push, then update the Acorn
         run: |
           acorn build --push --tag ghcr.io/${{ github.repository }}-acorn:$TAG .
-          acorn run --update --name ${{ github.event.repository.name }} 'ghcr.io/mikeluttikhuis/bier-acorn:*'
+          acorn run --update --name ${{ github.event.repository.name }} 'ghcr.io/mikeluttikhuis/bier-acorn:*' -p bier.mikeluttikhuis.nl:app:8080
