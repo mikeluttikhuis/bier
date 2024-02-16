@@ -1,5 +1,6 @@
 name: Create and publish an Acorn image
 on:
+  workflow_dispatch:
   push:
     tags:
       - '*'
