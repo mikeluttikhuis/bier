@@ -1,11 +1,11 @@
-name: Create and publish an Acorn image
+name: Create and publish an Docker image
 on:
   workflow_dispatch:
   push:
     tags:
       - '*'
 jobs:
-  build-push-upgrade-acorn:
+  build-push-upgrade-docker:
     runs-on: ubuntu-22.04
     permissions:
       packages: write
