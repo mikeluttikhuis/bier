@@ -21,7 +21,7 @@ jobs:
       - name: Set Tag
         run: |
           echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Build and Push, then update the Acorn
+      - name: Build and Push Docker Image
         run: |
-          acorn build --push --tag ghcr.io/${{ github.repository }}-acorn:$TAG .
-          acorn run --compute-class standard --update --name ${{ github.event.repository.name }} --publish bier.mikeluttikhuis.nl:app:8080 'ghcr.io/mikeluttikhuis/bier-acorn:*'
+          docker build -t ghcr.io/${{ github.repository }}:$TAG .
+          docker push ghcr.io/${{ github.repository }}:$TAG
