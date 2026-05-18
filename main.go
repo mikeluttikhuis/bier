@@ -68,8 +68,8 @@ func fetch(config Config) []map[string]string {
 	for _, discount := range data_discount.([]interface{}) {
 		for _, brand := range config.Brands {
 			for _, store := range config.Stores {
-				store_uid, _ := strconv.Atoi(discount.(map[string]interface{})["winkel_uid"].(string))
-				brand_uid, _ := strconv.Atoi(discount.(map[string]interface{})["soort_uid"].(string))
+				store_uid := int(discount.(map[string]interface{})["winkel_uid"].(float64))
+				brand_uid := int(discount.(map[string]interface{})["soort_uid"].(float64))
 				if store_uid == store.StoreId && brand_uid == brand.BrandId {
 					discounts = append(discounts, map[string]string{
 						"fromPrice":     discount.(map[string]interface{})["vanprijs"].(string),
